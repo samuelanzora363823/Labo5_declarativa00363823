@@ -1,7 +1,7 @@
 import screen.Theme;
 import screen.components.Buttons;
 import screen.components.PanelResult;
-import screen.components.TextField; // Importación corregida
+import screen.components.TextField;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -76,16 +76,24 @@ public class Window extends JFrame {
         return p;
     }
 
+    // AQUI VAN LOS BOTONES NUEVOS
     private JPanel crearBotones(Connection motor) {
         Buttons btnDerivar = new Buttons("Derivar", Theme.BLUE, Theme.BG, 26, 11, 14);
         Buttons btnIntegrar = new Buttons("Integrar", Theme.GREEN, Theme.BG, 26, 11, 14);
+        Buttons btnSumar = new Buttons("Sumar", Theme.AMBER, Theme.BG, 26, 11, 14);
+        Buttons btnRestar = new Buttons("Restar", Theme.RED, Theme.BG, 26, 11, 14);
+
         btnDerivar.addActionListener(e -> ejecutar(motor, "d"));
         btnIntegrar.addActionListener(e -> ejecutar(motor, "s"));
+        btnSumar.addActionListener(e -> ejecutar(motor, "suma"));
+        btnRestar.addActionListener(e -> ejecutar(motor, "resta"));
 
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         p.setOpaque(false);
         p.add(btnDerivar);
         p.add(btnIntegrar);
+        p.add(btnSumar);
+        p.add(btnRestar);
         return p;
     }
 
@@ -102,9 +110,14 @@ public class Window extends JFrame {
         return p;
     }
 
+    // AQUI SE ACTUALIZO LA LOGICA PARA LOS TITULOS DE SUMA Y RESTA
     private void ejecutar(Connection motor, String pred) {
         String entrada = txtEntrada.getText().trim();
-        String nombre = pred.equals("d") ? "Derivada" : "Integral";
+
+        String nombre = pred.equals("d") ? "Derivada" :
+                pred.equals("s") ? "Integral" :
+                        pred.equals("suma") ? "Suma" : "Resta";
+
         panelResultado.setTitulo(nombre + " de f(x)");
 
         if (entrada.isEmpty()) {
