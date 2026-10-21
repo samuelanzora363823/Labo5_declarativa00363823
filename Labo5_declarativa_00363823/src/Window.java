@@ -8,8 +8,12 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 
 public class Window extends JFrame {
-    private static final String[] EJEMPLOS = {"x", "log(x)", "3*x^2", "2^x"};
-    private final TextField txtEntrada = new TextField("Ej: 5*x^2");
+    // Ejemplos actualizados con las expresiones del catedrático
+    private static final String[] EJEMPLOS = {
+            "x^2 + 5*x^2", "7*x^3 - 3*x^3", "4*x + 2*x", "8*x^2 - 5*x^2"
+    };
+
+    private final TextField txtEntrada = new TextField("Ej: x^2 + 5*x^2");
     private final PanelResult panelResultado = new PanelResult();
     private final JLabel lblEstado = new JLabel("");
 
@@ -76,7 +80,6 @@ public class Window extends JFrame {
         return p;
     }
 
-    // AQUI VAN LOS BOTONES NUEVOS
     private JPanel crearBotones(Connection motor) {
         Buttons btnDerivar = new Buttons("Derivar", Theme.BLUE, Theme.BG, 26, 11, 14);
         Buttons btnIntegrar = new Buttons("Integrar", Theme.GREEN, Theme.BG, 26, 11, 14);
@@ -110,7 +113,6 @@ public class Window extends JFrame {
         return p;
     }
 
-    // AQUI SE ACTUALIZO LA LOGICA PARA LOS TITULOS DE SUMA Y RESTA
     private void ejecutar(Connection motor, String pred) {
         String entrada = txtEntrada.getText().trim();
 

@@ -69,10 +69,57 @@ s(Var, F - G, IF - IG) :-
 s(Var, K * F, K * IF) :-
     number(K), !, s(Var, F, IF).
 
-    % Regla para sumar
-    suma(Var, A + B, R) :-
-        R is A + B.
 
-    % Regla para restar
-    resta(Var, A - B, R) :-
-        R is A - B.
+% --- 5. SUMA DE EXPRESIONES ALGEBRAICAS ---
+
+% Caso: x^N + B*x^N (Ej. x^2 + 5*x^2)
+suma(Var, Var^N + B*Var^N, C*Var^N) :-
+    number(B), C is 1 + B, !.
+
+% Caso: A*x^N + B*x^N (Ej. 3*x^2 + 5*x^2)
+suma(Var, A*Var^N + B*Var^N, C*Var^N) :-
+    number(A), number(B), C is A + B, !.
+
+% Caso: A*x + B*x (Ej. 4*x + 2*x)
+suma(Var, A*Var + B*Var, C*Var) :-
+    number(A), number(B), C is A + B, !.
+
+% Caso: x + B*x (Ej. x + 2*x)
+suma(Var, Var + B*Var, C*Var) :-
+    number(B), C is 1 + B, !.
+
+
+% --- 6. RESTA DE EXPRESIONES ALGEBRAICAS ---
+
+% Caso: A*x^N - B*x^N (Ej. 7*x^3 - 3*x^3)
+resta(Var, A*Var^N - B*Var^N, C*Var^N) :-
+    number(A), number(B), C is A - B, !.
+
+% Caso: x^N - B*x^N (Ej. x^2 - 5*x^2)
+resta(Var, Var^N - B*Var^N, C*Var^N) :-
+    number(B), C is 1 - B, !.
+
+% Caso: A*x - B*x (Ej. 8*x - 5*x)
+resta(Var, A*Var - B*Var, C*Var) :-
+    number(A), number(B), C is A - B, !.
+
+% Caso: x - B*x (Ej. x - 5*x)
+resta(Var, Var - B*Var, C*Var) :-
+    number(B), C is 1 - B, !.
+
+    % --- 7. UNIFICACIÓN DE BOTONES ---
+
+    % Si presionas "Sumar" pero hay una resta, usa las reglas de resta
+    suma(Var, A - B, Res) :- resta(Var, A - B, Res), !.
+
+    % Si presionas "Restar" pero hay una suma, usa las reglas de suma
+    resta(Var, A + B, Res) :- suma(Var, A + B, Res), !.
+
+   % Caso combinado: simplificar los primeros dos términos semejantes y dejar el resto
+   suma(Var, A*Var^N - B*Var^N + Resto, C*Var^N + Resto) :-
+       number(A), number(B), C is A - B, !.
+
+      % Sumar tres términos (Ej. 4*x + 2*x + 3*x)
+      suma(Var, A*Var + B*Var + C*Var, Res*Var) :-
+          number(A), number(B), number(C),
+          Res is A + B + C, !.
