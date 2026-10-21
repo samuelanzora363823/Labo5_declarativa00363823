@@ -25,19 +25,26 @@ public class Connection {
         }
     }
 
-    // Método para convertir la estructura sintáctica de Prolog a texto matemático infijo
+    // Convierte el árbol sintáctico de tuProlog a expresión matemática legible
     private String formatearTermino(Term t) {
+        if (t == null) return "";
+
         if (t instanceof Struct) {
             Struct s = (Struct) t;
-            if (s.getArity() == 2) {
-                String op = s.getName();
-                if (op.equals("*") || op.equals("^") || op.equals("/") || op.equals("+") || op.equals("-")) {
+            String op = s.getName().replace("'", "").trim();
+            int arity = s.getArity();
+
+            if (arity == 2) {
+                if (op.equals("+") || op.equals("-") || op.equals("*") || op.equals("/") || op.equals("^")) {
                     return formatearTermino(s.getArg(0)) + op + formatearTermino(s.getArg(1));
                 }
-            } else if (s.getArity() == 1) {
-                return s.getName() + "(" + formatearTermino(s.getArg(0)) + ")";
+            } else if (arity == 1) {
+                return op + "(" + formatearTermino(s.getArg(0)) + ")";
+            } else if (arity == 0) {
+                return op;
             }
         }
-        return t.toString();
+
+        return t.toString().replace("'", "").trim();
     }
 }
